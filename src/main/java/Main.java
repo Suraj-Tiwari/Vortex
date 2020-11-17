@@ -1,18 +1,18 @@
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.Vertx;
-import io.vertx.ext.web.Router;
-import routes.HomeRouter;
+import routes.Routes;
 
 public class Main {
     public static void main(String[] args) {
         Vertx vertx = Vertx.vertx();
         HttpServer server = vertx.createHttpServer();
-        Router router = Router.router(vertx);
-
-        // register router here
-        new HomeRouter(router);
-
-        server.requestHandler(router);
-        server.listen(8082);
+        Routes router = new Routes(vertx);
+        server.requestHandler(router.getRoutes());
+        server.listen(8082, res -> {
+            if (res.succeeded())
+                System.out.println("Server started on port 8082");
+            else
+                System.out.println("Error starting server");
+        });
     }
 }
